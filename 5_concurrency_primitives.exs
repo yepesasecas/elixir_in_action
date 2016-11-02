@@ -12,3 +12,36 @@ defmodule Concurrency do
     1..i |> Enum.map(&async_query("async #{&1}"))
   end
 end
+
+defmodule Messages do
+  def ping_process do
+    caller = self
+    IO.puts "ping listening..."
+    receive do
+      {:pong, pid} ->
+        IO.puts "ping!"
+        send(pid, {:ping, caller})
+    end
+    ping_process
+  end
+
+  def pong_process(ping_pid) do
+    caller = self
+    IO.puts "pong listening..."
+    send(ping_pid, {:pong, caller})
+    receive do
+      {:ping, pid} ->
+        IO.puts "pong!"
+        send(pid, {:pong, caller})
+    end
+    pong_process(ping_pid)
+  end
+
+  def ping do
+    spawn(fn -> ping_process end)
+  end
+
+  def pong(ping_pid) do
+    spawn(fn -> pong_process(ping_pid) end)
+  end
+end
