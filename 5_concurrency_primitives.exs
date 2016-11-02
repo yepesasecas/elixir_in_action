@@ -1,9 +1,14 @@
-run_query = fn(query_def) ->
-  :timer.sleep(2000)
-  IO.puts "#{query_def} running"
-  "#{query_def} result. "
-end
+defmodule Concurrency do
+  def run_query(query_def) do
+    :timer.sleep(2000)
+    IO.puts "#{query_def} query"
+  end
 
-1..5
-  |> Enum.map(&run_query.("query #{&1}"))
-  |> IO.puts
+  def async_query(query_def) do
+    spawn(fn -> run_query(query_def) end)
+  end
+
+  def start(i) do
+    1..i |> Enum.map(&async_query("async #{&1}"))
+  end
+end
