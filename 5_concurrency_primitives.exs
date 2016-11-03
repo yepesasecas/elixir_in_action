@@ -1,6 +1,6 @@
 defmodule Concurrency do
   def run_query(query_def) do
-    :timer.sleep(2000)
+    :timer.sleep(10000)
     IO.puts "#{query_def} query"
   end
 
@@ -43,5 +43,11 @@ defmodule Messages do
 
   def pong(ping_pid) do
     spawn(fn -> pong_process(ping_pid) end)
+  end
+
+  def loop(a) do
+    IO.puts a
+    a = a + 1
+    loop(a)
   end
 end
