@@ -23,6 +23,10 @@ defmodule KeyValueStore do
     {:reply, HashDict.get(state, key), state}
   end
 
+  def handle_call({:put, key}, _, state) do
+    {:reply, HashDict.get(state, key), state}
+  end
+
   def handle_cast({:put, key, value}, state) do
     {:noreply, HashDict.put(state, key, value)}
   end
